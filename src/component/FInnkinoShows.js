@@ -19,12 +19,6 @@ class FinnkinoShows extends Component {
   ownFunction = () => {
     var cinema = this.refs.one.value;
     var newAreaId = "";
-    // if(cinema === 'Espoo'){
-    //   this.setState( { areaId: 1012} )
-    // }
-    // if(cinema === 'Helsinki:ITIS'){
-    //   this.setState( { areaId: 1045 } )
-    // }
     switch (cinema) {
       case "Espoo":
         newAreaId = 1012;
@@ -83,13 +77,16 @@ class FinnkinoShows extends Component {
       case "Turku:KINOPALATSI":
         newAreaId = 1022;
         break;
+      case "Select Cinemas":
+        newAreaId = 1032;
+        break;
     }
 
     this.setState({ areaId: newAreaId });
-    this.getTexts();
+    // this.getTexts();
   };
   getTexts = () => {
-    var {areaId} = this.state;
+    var { areaId } = this.state;
     var today = moment().format("DD.MM.YYYY");
     axios
       .get(
@@ -113,9 +110,6 @@ class FinnkinoShows extends Component {
       });
   };
   render() {
-    var title = this.state.name.map(items => items);
-    var imagess = this.state.imags.map(items => items);
-    var showTime = this.state.showStart.map(items => items);
     var style = { width: "100%", display: "flex" };
     var styleTitle = {
       width: "40%",
@@ -124,7 +118,8 @@ class FinnkinoShows extends Component {
       alignItems: "center",
       background: "black",
       color: "gold",
-      border: "1px solid"
+      border: "1px solid",
+      fontSize: '23px'
     };
     var styleTime = {
       width: "20%",
@@ -133,13 +128,13 @@ class FinnkinoShows extends Component {
       alignItems: "center",
       background: "black",
       color: "gold",
-      border: "1px solid"
+      border: "1px solid",
+      fontSize: '23px'
     };
-    var styleSali = { color: "green", border: "1px solid black" };
     return (
       <div>
-        <select name="first" id="one" ref="one" onChange={this.ownFunction}>
-          <option>Select Cinemas</option>
+        <select className='select animated zoomIn' name="first" id="one" ref="one" onChange={this.ownFunction}>
+          <option disabled="disabled">Select Cinemas</option>
           <option>Espoo</option>
           <option>Espoo:OMENA</option>
           <option>Espoo:SELLO</option>
@@ -160,8 +155,6 @@ class FinnkinoShows extends Component {
           <option>Tampere:PLEVNA</option>
           <option>Turku:KINOPALATSI</option>
         </select>
-        {/* <input type='text' ref='typa' placeholder="Cinemas areaId & enter" onKeyPress={ this.changeMovies } />
-        <p>Type Cinema Id like 1021, 1022 or 1013 or 1032, 1039 and Press Cinema/Enter then Fetch Button </p> */}
         <h1 className="showText">Shows Timing </h1>
         <button className="fetchBtn" onClick={this.getTexts}>
           Fetch
@@ -184,12 +177,24 @@ class FinnkinoShows extends Component {
                 width="150px"
               />
             </div>
-            {console.log(items.TheatreAndAuditorium)}
             <div style={styleTitle}>
               <ul style={{ listStyle: "none" }}>
-                <li>{items.TheatreAndAuditorium.toString().split(",")}</li>
-                {/* <li>{ items.TheatreAndAuditorium.toString().split( ',' )[1] } </li>
-                       <li> { items.TheatreAndAuditorium.toString().split( ',' )[2] }</li> */}
+                {items.TheatreAndAuditorium.toString().split(",").length ==
+                3 ? (
+                  <span>
+                    <li>
+                      {items.TheatreAndAuditorium.toString().split(",")[0]}
+                    </li>
+                    <li>
+                      {items.TheatreAndAuditorium.toString().split(",")[1]}
+                    </li>
+                    <li>
+                      {items.TheatreAndAuditorium.toString().split(",")[2]}
+                    </li>
+                  </span>
+                ) : (
+                  <li>{items.TheatreAndAuditorium.toString().split(",")}</li>
+                )}
               </ul>
             </div>
           </div>
